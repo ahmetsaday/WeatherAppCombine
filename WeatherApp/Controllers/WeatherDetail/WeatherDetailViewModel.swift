@@ -8,29 +8,48 @@
 import Foundation
 import Combine
 
-class WeatherDetailViewModel: ObservableObject {
-    @Published private(set) var cityName: String
-    @Published private(set) var cityTemp: Int
+class WeatherDetailViewModel {
     
-    var subsriptions =  Set<AnyCancellable>()
-    
-    let weather = Weather(cityName: "Istanbul", cityTemp: 24)
-    
-    init() {
-        self.cityName = weather.cityName
-        self.cityTemp = weather.cityTemp
-
-
-
+    enum Input {
+        case viewDidAppear
+        case refreshButtonDidTap
     }
     
+    enum Output {
+        case fetchWeatherFail(error: NetworkError)
+        case fetchWeatherSucceed(weather:Weather)
+        case toggleButton(isEnabled: Bool)
+    }
     
-//    WeatherDetailRequest().call()
-//        .sink {completion in
-//
-//        } { value in
-//
-//        }
+    private let output: PassthroughSubject<Output, Never> = .init()
+    private var subscription = Set<AnyCancellable>()
     
+    func transform(input: AnyPublisher<Input,Never>) -> AnyPublisher<Output,Never> {
+        input.sink { [weak self] event in
+            switch event {
+                
+            case .viewDidAppear, .refreshButtonDidTap:
+                self?.handleGetWeather()
+            }
+        }.store(in: &subscription)
+        
+        return output.eraseToAnyPublisher()
+    }
     
+    private func handleGetWeather() {
+        output.send(.toggleButton(isEnabled: false))
+        WeatherDetailRequest(lat: "44.34", lon: "10.99").call()
+            .sink { [weak self] complation in
+                self?.output.send(.toggleButton(isEnabled: true))
+                
+                if case .failure(let error) = complation {
+                    self?.output.send(.fetchWeatherFail(error: error))
+                }
+                
+            } receiveValue: { [weak self] weatherDetailResponse in
+                let weather = Weather(cityName: weatherDetailResponse.name, cityTemp: 30)
+                self?.output.send(.fetchWeatherSucceed(weather: weather))
+            }.store(in: &subscription)
+
+    }
 }

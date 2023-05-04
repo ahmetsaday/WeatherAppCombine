@@ -51,12 +51,28 @@
                                     <constraint firstItem="ZV0-vC-Dh2" firstAttribute="leading" secondItem="abu-0j-Fl9" secondAttribute="trailing" constant="8" id="ZNM-kJ-gAx"/>
                                 </constraints>
                             </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0pr-CZ-Cej">
+                                <rect key="frame" x="20" y="252.66666666666663" width="353" height="40"/>
+                                <color key="backgroundColor" systemColor="systemGray4Color"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="mOA-Yq-Tan"/>
+                                </constraints>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title="Refresh" subtitle=""/>
+                                <connections>
+                                    <action selector="refreshButtonTapped:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="XwD-HY-WpN"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="vDu-zF-Fre"/>
                         <color key="backgroundColor" systemColor="systemTealColor"/>
                         <constraints>
                             <constraint firstItem="xTF-zk-PmR" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" constant="15" id="4PP-kw-sVJ"/>
+                            <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="0pr-CZ-Cej" secondAttribute="trailing" constant="20" id="6jY-LX-uPU"/>
+                            <constraint firstItem="0pr-CZ-Cej" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" constant="20" id="CT2-Yn-MGi"/>
                             <constraint firstItem="8Z7-UQ-1Bz" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" constant="15" id="DAX-po-Y9P"/>
+                            <constraint firstItem="0pr-CZ-Cej" firstAttribute="top" secondItem="8Z7-UQ-1Bz" secondAttribute="bottom" constant="40" id="FoV-wN-8qd"/>
                             <constraint firstItem="8Z7-UQ-1Bz" firstAttribute="top" secondItem="xTF-zk-PmR" secondAttribute="bottom" constant="10" id="SRx-fz-QDk"/>
                             <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="xTF-zk-PmR" secondAttribute="trailing" constant="15" id="bgb-v7-3h2"/>
                             <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="8Z7-UQ-1Bz" secondAttribute="trailing" constant="15" id="tJO-hi-W4G"/>
@@ -66,6 +82,7 @@
                     <connections>
                         <outlet property="cityNameLabel" destination="xTF-zk-PmR" id="sr2-EC-bx2"/>
                         <outlet property="cityTempLabel" destination="abu-0j-Fl9" id="nJA-1v-cuf"/>
+                        <outlet property="refreshButton" destination="0pr-CZ-Cej" id="Zkb-5u-3kJ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -74,6 +91,9 @@
         </scene>
     </scenes>
     <resources>
+        <systemColor name="systemGray4Color">
+            <color red="0.81960784313725488" green="0.81960784313725488" blue="0.83921568627450982" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
         <systemColor name="systemOrangeColor">
             <color red="1" green="0.58431372549019611" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>

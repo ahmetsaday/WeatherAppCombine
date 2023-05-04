@@ -13,29 +13,47 @@ class WeatherDetailViewController: UIViewController, BaseViewController {
     //MARK: Properties
     @IBOutlet weak var cityNameLabel: UILabel!
     @IBOutlet weak var cityTempLabel: UILabel!
+    @IBOutlet weak var refreshButton: UIButton!
     
-    var subsriptions = Set<AnyCancellable>()
+    private var subsriptions = Set<AnyCancellable>()
+    private let viewModel = WeatherDetailViewModel()
+    private let input: PassthroughSubject<WeatherDetailViewModel.Input, Never> = .init()
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         bind()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        input.send(.viewDidAppear)
+    }
+    
+    func bind() {
+        let output = viewModel.transform(input: input.eraseToAnyPublisher())
         
-        
-        WeatherDetailRequest(lat: "44.34", lon: "10.99").call()
-            .sink(receiveCompletion: { print("complation \($0)") }, receiveValue: { print("value: \($0.name)") })
+        output
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] event in
+                switch event {
+                case .fetchWeatherFail(error: let error):
+                    self?.cityNameLabel.text = error.localizedDescription
+                case .fetchWeatherSucceed(weather: let weather):
+                    self?.cityNameLabel.text = weather.cityName
+                    self?.cityTempLabel.text = String(weather.cityTemp)
+                case .toggleButton(isEnabled: let isEnabled):
+                    self?.refreshButton.isEnabled = isEnabled
+                }
+            }
             .store(in: &subsriptions)
     }
     
-    //MARK: BaseViewController Methods
-    func bind() {
-        let viewModel = WeatherDetailViewModel()
-        
-        viewModel.$cityName.assign(to: \.text!, on: cityNameLabel)
-            .store(in: &subsriptions)
-        viewModel.$cityTemp
-            .map { String($0) }
-            .assign(to: \.text!, on: cityTempLabel)
-            .store(in: &subsriptions)
+    
+    
+    @IBAction func refreshButtonTapped(_ sender: UIButton) {
+        input.send(.refreshButtonDidTap)
     }
+    
+    
 }
